@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Reversi door Charlotte en Bastiaan
+
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
