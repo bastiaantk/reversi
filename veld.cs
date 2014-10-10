@@ -8,7 +8,9 @@ class Veld : UserControl
     int[,] geheugen;
     bool[,] geldig;
     public bool hint = false;
-    public int beurt;
+    bool gestart = false;
+    bool[] pas = new bool[2];
+    public int beurt = 0;
     public int mogelijkheden
     {
         get
@@ -21,6 +23,8 @@ class Veld : UserControl
             return mogelijkheden;
         }
     }
+    public Brush speler2Kleur = Brushes.White;
+    public Brush speler1Kleur = Brushes.Black;
 
     public Veld(Point locatie, int veldBreedte, int veldHoogte)
     {
@@ -46,12 +50,14 @@ class Veld : UserControl
     public void initVeld()
     {
         //Reset het geheugen
-        this.geheugen = new int[this.veldBreedte, this.veldHoogte];
-        this.beurt = 1; 
+        this.geheugen = new int[this.veldBreedte, this.veldHoogte];        
     }
 
-    public void standaardOpstelling()
+    public void startSpel()
     {
+        this.beurt = 1;
+        this.gestart = true;
+
         //Plaats 4 stenen in het midden van het veld
         int middenX = (int)Math.Ceiling((double)this.veldBreedte / 2);
         int middenY = (int)Math.Ceiling((double)this.veldHoogte / 2);
@@ -74,10 +80,22 @@ class Veld : UserControl
         //Teken de stenen uit het geheugen op het bord
         this.tekenVakjes(gr);
 
+        if (mogelijkheden == 0 && gestart)
+        {
+            this.pas[this.beurt % 2] = true;
+
+            if (this.pas[0] && this.pas[1])
+            {
+                MessageBox.Show("stop spel");
+            }
+
+            MessageBox.Show("geen mogelijkheden");
+        }        
+
         this.hint = false;
         
         //Debug info speelVeld
-        Console.WriteLine("Beurt: {0}, Mogelijkheden: {1}, Speler 1 Score: {2}, Speler 2 Score: {3}", this.beurt, this.mogelijkheden, this.score(1), this.score(2));
+        Console.WriteLine("Aan de beurt: {4}, Beurt: {0}, Mogelijkheden: {1}, Speler 1 Score: {2}, Speler 2 Score: {3}", this.beurt, this.mogelijkheden, this.score(1), this.score(2), this.beurt % 2);
     }
 
     //Geef de score van de aangegeven speler aan de hand van het geheugen
@@ -105,8 +123,8 @@ class Veld : UserControl
                 //Bepaal kleur van steen en teken steen
                 if (this.geheugen[x, y] > 0)
                 {
-                    if (this.geheugen[x, y] == 1) kleur = Brushes.Red;
-                    else if (this.geheugen[x, y] == 2) kleur = Brushes.Blue;
+                    if (this.geheugen[x, y] == 1) kleur = this.speler1Kleur;
+                    else if (this.geheugen[x, y] == 2) kleur = this.speler2Kleur;
                     gr.FillEllipse(kleur, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                 }
 
@@ -115,6 +133,10 @@ class Veld : UserControl
                 {
                     this.geldig[x, y] = true;
                     gr.DrawEllipse(Pens.Gray, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
+                }
+                else if (this.valideerZet(x, y))
+                {
+                    this.geldig[x, y] = true;
                 }
             }
     }

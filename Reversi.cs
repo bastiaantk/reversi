@@ -8,11 +8,11 @@ public class Scherm : Form
 {
     Knop nieuwSpel = new Knop("Nieuw spel", new Point(20,20));
     Knop hint = new Knop("Hint", new Point(20, 64));
-    Tekst speler1Score = new Tekst("Speler 1: 0", new Point(20,110));
-    Tekst speler2Score = new Tekst ("Speler 2: 0",new Point(20, 140));
-    Tekst beurten = new Tekst ("aan zet", new Point(20,170));
-    const int veldBreedte = 5;
-    const int veldHoogte = 5;
+    Tekst speler1Score = new Tekst("Speler 1: 0", new Point(45, 110));
+    Tekst speler2Score = new Tekst ("Speler 2: 0",new Point(45, 140));
+    Tekst beurten = new Tekst ("Beurt: ", new Point(45, 170));
+    const int veldBreedte = 3;
+    const int veldHoogte = 3;
     Veld speelVeld = new Veld(new Point(180, 20), veldHoogte, veldBreedte);
 
     public Scherm() 
@@ -20,6 +20,7 @@ public class Scherm : Form
         this.ClientSize = new Size(200 + speelVeld.vakGrootte * veldBreedte, 40 + speelVeld.vakGrootte * veldHoogte);
 
         this.Text = "Reversi";
+        this.Paint += tekenStenen;
 
         this.nieuwSpel.Click += klik;
         this.Controls.Add(this.nieuwSpel);
@@ -37,12 +38,24 @@ public class Scherm : Form
         this.beurten.Text = "Beurt: " + Convert.ToString(this.speelVeld.beurt);
     }
 
+    private void tekenStenen(object obj, PaintEventArgs pea)
+    {
+        Graphics gr = pea.Graphics;
+        gr.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+        gr.FillEllipse(this.speelVeld.speler1Kleur, 20, 114, 20, 20);
+        gr.FillEllipse(this.speelVeld.speler2Kleur, 20, 144, 20, 20);
+        if (this.speelVeld.beurt == 0) gr.FillEllipse(Brushes.Gray, 20, 174, 20, 20);
+        else if (this.speelVeld.beurt % 2 == 0) gr.FillEllipse(this.speelVeld.speler1Kleur, 20, 174, 20, 20);
+        else if (this.speelVeld.beurt % 2 == 1) gr.FillEllipse(this.speelVeld.speler2Kleur, 20, 174, 20, 20);
+    }
+
     private void klik(object sender, EventArgs e)
     {
         if (sender == this.nieuwSpel)
         {
             this.speelVeld.initVeld();
-            this.speelVeld.standaardOpstelling();
+            this.speelVeld.startSpel();
             this.speelVeld.Invalidate();
         }
         else if (sender == this.hint)
@@ -57,6 +70,7 @@ public class Scherm : Form
         this.speler1Score.Text = "Speler 1: " + Convert.ToString(this.speelVeld.score(1));
         this.speler2Score.Text = "Speler 1: " + Convert.ToString(this.speelVeld.score(2));
         this.beurten.Text = "Beurt: " + Convert.ToString(this.speelVeld.beurt);
+        this.Invalidate();
     }
 }
 

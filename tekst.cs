@@ -10,7 +10,7 @@ public class Tekst : Label
         this.Text = tekst;
         this.Location = locatie;
         this.Font = new Font("Corbel", 14);
-        this.Size = new Size(140, 30);
+        this.Size = new Size(120, 30);
         this.Padding = new Padding(0, 3, 0, 0);
     }
 }
