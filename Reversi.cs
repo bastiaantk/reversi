@@ -11,8 +11,8 @@ public class Scherm : Form
     Tekst speler1Score = new Tekst("Speler 1: 0", new Point(45, 110));
     Tekst speler2Score = new Tekst ("Speler 2: 0",new Point(45, 140));
     Tekst beurten = new Tekst ("Beurt: ", new Point(45, 170));
-    const int veldBreedte = 3;
-    const int veldHoogte = 3;
+    const int veldBreedte = 5;
+    const int veldHoogte = 5;
     Veld speelVeld = new Veld(new Point(180, 20), veldHoogte, veldBreedte);
 
     public Scherm() 
@@ -68,7 +68,7 @@ public class Scherm : Form
     public void updateScherm(object obj, PaintEventArgs pea)
     {
         this.speler1Score.Text = "Speler 1: " + Convert.ToString(this.speelVeld.score(1));
-        this.speler2Score.Text = "Speler 1: " + Convert.ToString(this.speelVeld.score(2));
+        this.speler2Score.Text = "Speler 2: " + Convert.ToString(this.speelVeld.score(2));
         this.beurten.Text = "Beurt: " + Convert.ToString(this.speelVeld.beurt);
         this.Invalidate();
     }

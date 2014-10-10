@@ -69,7 +69,7 @@ class Veld : UserControl
         this.Cursor = Cursors.Hand;
     }
 
-    private void tekenVeld(object obj, PaintEventArgs pea) 
+    private void tekenVeld(object obj, PaintEventArgs pea)
     {
         Graphics gr = pea.Graphics;
         gr.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
@@ -80,22 +80,27 @@ class Veld : UserControl
         //Teken de stenen uit het geheugen op het bord
         this.tekenVakjes(gr);
 
+        //Debug info speelVeld
+        Console.WriteLine("Aan de beurt: {4}, Beurt: {0}, Mogelijkheden: {1}, Speler 1 Score: {2}, Speler 2 Score: {3}", this.beurt, this.mogelijkheden, this.score(1), this.score(2), this.beurt % 2);
+
         if (mogelijkheden == 0 && gestart)
         {
             this.pas[this.beurt % 2] = true;
-
+            
             if (this.pas[0] && this.pas[1])
             {
-                MessageBox.Show("stop spel");
+                this.eindeSpel();
             }
-
-            MessageBox.Show("geen mogelijkheden");
-        }        
+            else
+            {
+                if (this.pas[0]) MessageBox.Show("Speler 1 heeft geen mogelijke zetten. Speler 2 is aan de beurt.");
+                else if (this.pas[1]) MessageBox.Show("Speler 2 heeft geen mogelijke zetten. Speler 1 is aan de beurt.");
+                this.Invalidate();
+                this.beurt++;
+            }
+        }
 
         this.hint = false;
-        
-        //Debug info speelVeld
-        Console.WriteLine("Aan de beurt: {4}, Beurt: {0}, Mogelijkheden: {1}, Speler 1 Score: {2}, Speler 2 Score: {3}", this.beurt, this.mogelijkheden, this.score(1), this.score(2), this.beurt % 2);
     }
 
     //Geef de score van de aangegeven speler aan de hand van het geheugen
@@ -107,6 +112,15 @@ class Veld : UserControl
                 if (this.geheugen[x, y] == speler) score++;
 
         return score;
+    }
+
+    private void eindeSpel()
+    {
+        String message = "Er zijn geen mogelijke zetten meer.";
+        if (score(1) > score(2)) message += " Speler 1 wint!";
+        else if (score(1) < score(2)) message += " Speler 2 wint!";
+        else message += " Remise!";
+        MessageBox.Show(message);
     }
 
     //Teken het veld vanuit het geheugen op het scherm
@@ -143,6 +157,8 @@ class Veld : UserControl
 
     private void doeZet(object obj, MouseEventArgs m)
     {
+        this.pas[this.beurt % 2] = false;
+
         //Bepaal in welk vak is geklikt
         int vakX = m.X / 50;
         int vakY = m.Y / 50;
