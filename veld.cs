@@ -122,6 +122,7 @@ class Veld : UserControl
         if (score(1) > score(2)) message += " Speler 1 wint!";
         else if (score(1) < score(2)) message += " Speler 2 wint!";
         else message += " Remise!";
+        this.gestart = false;
         MessageBox.Show(message);
     }
 
@@ -190,7 +191,7 @@ class Veld : UserControl
         
         if (this.heeftSteen(x,y)) return false;
 
-        if (!this.checkNaast(x, y)) return false;
+        if (!this.check(x, y)) return false;
 
         return true;
     }
@@ -227,7 +228,7 @@ class Veld : UserControl
     }
 
     //Check of de zet een tegel kan veroveren die ernaast zit
-    private bool checkNaast(int x, int y)
+    private bool check(int x, int y)
     {
         if (this.checkRichting(x, y, 0, -1)) return true; //Boven
         if (this.checkRichting(x, y, 1, -1)) return true; //Rechtsboven

@@ -11,8 +11,8 @@ public class Scherm : Form
     Tekst speler1Score = new Tekst("Speler 1: 0", new Point(45, 110));
     Tekst speler2Score = new Tekst ("Speler 2: 0",new Point(45, 140));
     Tekst beurten = new Tekst ("Beurt: ", new Point(45, 170));
-    const int veldBreedte = 10;
-    const int veldHoogte = 10;
+    const int veldBreedte = 6;
+    const int veldHoogte = 6;
     Veld speelVeld = new Veld(new Point(180, 20), veldHoogte, veldBreedte);
 
     public Scherm() 
