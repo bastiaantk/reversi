@@ -17,6 +17,8 @@ public class Scherm : Form
     {
         this.ClientSize = new Size(200 + speelVeld.vakGrootte * veldBreedte, 40 + speelVeld.vakGrootte * veldHoogte);
 
+        this.Text = "Reversi";
+
         this.nieuwSpel.Click += klik;
         this.Controls.Add(this.nieuwSpel);
 

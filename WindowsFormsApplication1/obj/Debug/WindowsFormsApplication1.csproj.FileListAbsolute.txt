@@ -1,9 +1,0 @@
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\obj\Debug\Hallo2.resources
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
-C:\Users\Charlotte\Dropbox\Reversi\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb

@@ -1,6 +1,0 @@
-C:\Users\Charlotte\Dropbox\Reversi\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe.config
-C:\Users\Charlotte\Dropbox\Reversi\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
-C:\Users\Charlotte\Dropbox\Reversi\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
-C:\Users\Charlotte\Dropbox\Reversi\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache
-C:\Users\Charlotte\Dropbox\Reversi\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
-C:\Users\Charlotte\Dropbox\Reversi\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb

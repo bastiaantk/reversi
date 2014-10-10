@@ -11,3 +11,6 @@ C:\Users\Gebruiker\Dropbox\Reversi\obj\Debug\Reversi.pdb
 C:\Users\Gebruiker\Dropbox\Reversi\bin\Debug\Reversi.exe
 C:\Users\Gebruiker\Dropbox\Reversi\bin\Debug\Reversi.pdb
 C:\Users\Gebruiker\Dropbox\Reversi\obj\Debug\Reversi.csprojResolveAssemblyReference.cache
+C:\Users\Gebruiker\Documents\GitHub\reversi\bin\Debug\Reversi.exe.config
+C:\Users\Gebruiker\Documents\GitHub\reversi\obj\Debug\Reversi.exe
+C:\Users\Gebruiker\Documents\GitHub\reversi\obj\Debug\Reversi.pdb
