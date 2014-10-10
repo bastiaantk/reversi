@@ -17,3 +17,9 @@ C:\Users\Gebruiker\Documents\GitHub\reversi\bin\Debug\Reversi.pdb
 C:\Users\Gebruiker\Documents\GitHub\reversi\obj\Debug\Reversi.csprojResolveAssemblyReference.cache
 C:\Users\Gebruiker\Documents\GitHub\reversi\obj\Debug\Reversi.exe
 C:\Users\Gebruiker\Documents\GitHub\reversi\obj\Debug\Reversi.pdb
+C:\Users\Charlotte\Documents\GitHub\reversi\bin\Debug\Reversi.exe.config
+C:\Users\Charlotte\Documents\GitHub\reversi\obj\Debug\Reversi.exe
+C:\Users\Charlotte\Documents\GitHub\reversi\obj\Debug\Reversi.pdb
+C:\Users\Charlotte\Documents\GitHub\reversi\bin\Debug\Reversi.exe
+C:\Users\Charlotte\Documents\GitHub\reversi\bin\Debug\Reversi.pdb
+C:\Users\Charlotte\Documents\GitHub\reversi\obj\Debug\Reversi.csprojResolveAssemblyReference.cache
