@@ -7,12 +7,12 @@ using System.Windows.Forms;
 public class Scherm : Form
 {
     Knop nieuwSpel = new Knop("Nieuw spel", new Point(20,20));
-    Knop help = new Knop("Help", new Point(20, 74));
-    Tekst speler1Stenen = new Tekst("aantal stenen", new Point(20,90));
-    Tekst speler2Stenen = new Tekst ("aantal stenen",new Point(20, 120));
-    Tekst beurten = new Tekst ("aan zet", new Point(20,150));
-    const int veldBreedte = 10;
-    const int veldHoogte = 10;
+    Knop hint = new Knop("Hint", new Point(20, 64));
+    Tekst speler1Score = new Tekst("Speler 1: 0", new Point(20,110));
+    Tekst speler2Score = new Tekst ("Speler 2: 0",new Point(20, 140));
+    Tekst beurten = new Tekst ("aan zet", new Point(20,170));
+    const int veldBreedte = 5;
+    const int veldHoogte = 5;
     Veld speelVeld = new Veld(new Point(180, 20), veldHoogte, veldBreedte);
 
     public Scherm() 
@@ -24,9 +24,11 @@ public class Scherm : Form
         this.nieuwSpel.Click += klik;
         this.Controls.Add(this.nieuwSpel);
 
-        this.Controls.Add(this.help);
-        this.Controls.Add(this.speler1Stenen);
-        this.Controls.Add(this.speler2Stenen);
+        this.hint.Click += klik;
+        this.Controls.Add(this.hint);
+
+        this.Controls.Add(this.speler1Score);
+        this.Controls.Add(this.speler2Score);
         this.Controls.Add(this.beurten);
 
         this.speelVeld.Paint += this.updateScherm;
@@ -40,12 +42,20 @@ public class Scherm : Form
         if (sender == this.nieuwSpel)
         {
             this.speelVeld.initVeld();
+            this.speelVeld.standaardOpstelling();
+            this.speelVeld.Invalidate();
+        }
+        else if (sender == this.hint)
+        {
+            this.speelVeld.hint = true;
             this.speelVeld.Invalidate();
         }
     }
 
     public void updateScherm(object obj, PaintEventArgs pea)
     {
+        this.speler1Score.Text = "Speler 1: " + Convert.ToString(this.speelVeld.score(1));
+        this.speler2Score.Text = "Speler 1: " + Convert.ToString(this.speelVeld.score(2));
         this.beurten.Text = "Beurt: " + Convert.ToString(this.speelVeld.beurt);
     }
 }

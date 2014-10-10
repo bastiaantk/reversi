@@ -7,6 +7,7 @@ class Veld : UserControl
     public int veldBreedte, veldHoogte, vakGrootte;
     int[,] geheugen;
     bool[,] geldig;
+    public bool hint = false;
     public int beurt;
     public int mogelijkheden
     {
@@ -35,7 +36,7 @@ class Veld : UserControl
         this.Height = this.vakGrootte * this.veldHoogte + 1;
         this.Width = this.vakGrootte * this.veldBreedte + 1;
         this.Location = locatie;
-        this.BackColor = Color.Pink;
+        this.BackColor = Color.Green;
         this.Paint += this.tekenVeld;
         this.MouseClick += this.doeZet;
 
@@ -46,8 +47,11 @@ class Veld : UserControl
     {
         //Reset het geheugen
         this.geheugen = new int[this.veldBreedte, this.veldHoogte];
-        this.beurt = 1;
+        this.beurt = 1; 
+    }
 
+    public void standaardOpstelling()
+    {
         //Plaats 4 stenen in het midden van het veld
         int middenX = (int)Math.Ceiling((double)this.veldBreedte / 2);
         int middenY = (int)Math.Ceiling((double)this.veldHoogte / 2);
@@ -55,6 +59,8 @@ class Veld : UserControl
         this.geheugen[middenX, middenY] = 1;
         this.geheugen[middenX, middenY - 1] = 2;
         this.geheugen[middenX - 1, middenY] = 2;
+
+        this.Cursor = Cursors.Hand;
     }
 
     private void tekenVeld(object obj, PaintEventArgs pea) 
@@ -67,6 +73,8 @@ class Veld : UserControl
 
         //Teken de stenen uit het geheugen op het bord
         this.tekenVakjes(gr);
+
+        this.hint = false;
         
         //Debug info speelVeld
         Console.WriteLine("Beurt: {0}, Mogelijkheden: {1}, Speler 1 Score: {2}, Speler 2 Score: {3}", this.beurt, this.mogelijkheden, this.score(1), this.score(2));
@@ -103,7 +111,7 @@ class Veld : UserControl
                 }
 
                 //Teken mogelijke zetten
-                else if (this.valideerZet(x, y))
+                else if (this.valideerZet(x, y) && hint)
                 {
                     this.geldig[x, y] = true;
                     gr.DrawEllipse(Pens.Gray, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
