@@ -44,11 +44,11 @@ public class Scherm : Form
         Graphics gr = pea.Graphics;
         gr.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
-        gr.FillEllipse(this.speelVeld.speler1Kleur, 20, 114, 20, 20);
-        gr.FillEllipse(this.speelVeld.speler2Kleur, 20, 144, 20, 20);
+        gr.FillEllipse(this.speelVeld.speler1Brush, 20, 114, 20, 20);
+        gr.FillEllipse(this.speelVeld.speler2Brush, 20, 144, 20, 20);
         if (this.speelVeld.beurt == 0) gr.FillEllipse(Brushes.Gray, 20, 174, 20, 20);
-        else if (this.speelVeld.beurt % 2 == 0) gr.FillEllipse(this.speelVeld.speler1Kleur, 20, 174, 20, 20);
-        else if (this.speelVeld.beurt % 2 == 1) gr.FillEllipse(this.speelVeld.speler2Kleur, 20, 174, 20, 20);
+        else if (this.speelVeld.beurt % 2 == 0) gr.FillEllipse(this.speelVeld.speler1Brush, 20, 174, 20, 20);
+        else if (this.speelVeld.beurt % 2 == 1) gr.FillEllipse(this.speelVeld.speler2Brush, 20, 174, 20, 20);
     }
 
     private void klik(object sender, EventArgs e)

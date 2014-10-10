@@ -23,8 +23,10 @@ class Veld : UserControl
             return mogelijkheden;
         }
     }
-    public Brush speler2Kleur = Brushes.White;
-    public Brush speler1Kleur = Brushes.Black;
+    public static Color speler1Kleur = Color.White;
+    public static Color speler2Kleur = Color.Black;
+    public Brush speler2Brush = new SolidBrush(speler1Kleur);
+    public Brush speler1Brush = new SolidBrush(speler2Kleur);
 
     public Veld(Point locatie, int veldBreedte, int veldHoogte)
     {
@@ -137,8 +139,8 @@ class Veld : UserControl
                 //Bepaal kleur van steen en teken steen
                 if (this.geheugen[x, y] > 0)
                 {
-                    if (this.geheugen[x, y] == 1) kleur = this.speler1Kleur;
-                    else if (this.geheugen[x, y] == 2) kleur = this.speler2Kleur;
+                    if (this.geheugen[x, y] == 1) kleur = this.speler1Brush;
+                    else if (this.geheugen[x, y] == 2) kleur = this.speler2Brush;
                     gr.FillEllipse(kleur, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                 }
 
@@ -146,7 +148,10 @@ class Veld : UserControl
                 else if (this.valideerZet(x, y) && hint)
                 {
                     this.geldig[x, y] = true;
-                    gr.DrawEllipse(Pens.Gray, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
+                    Pen pen = default(Pen);
+                    if (this.beurt % 2 == 0) pen = new Pen(this.speler1Brush);
+                    else if (this.beurt % 2 == 1) pen = new Pen(this.speler2Brush);
+                    gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                 }
                 else if (this.valideerZet(x, y))
                 {
