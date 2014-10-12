@@ -8,9 +8,11 @@ class Veld : UserControl
     int[,] geheugen;
     bool[,] geldig;
     public bool hint = false;
-    bool gestart = false;
+    public bool gestart = false;
     bool[] pas = new bool[2];
     public int beurt = 0;
+    public String status;
+    String[] spelerNamen;
     public int mogelijkheden
     {
         get
@@ -28,7 +30,7 @@ class Veld : UserControl
     public Brush speler2Brush = new SolidBrush(speler1Kleur);
     public Brush speler1Brush = new SolidBrush(speler2Kleur);
 
-    public Veld(Point locatie, int veldBreedte, int veldHoogte)
+    public Veld(Point locatie, int veldBreedte, int veldHoogte, String[] spelerNamen)
     {
         //Minimum breedte en hoogte is 3
         if (veldBreedte < 3) veldBreedte = 3;
@@ -37,6 +39,7 @@ class Veld : UserControl
         this.veldBreedte = veldBreedte;
         this.veldHoogte = veldHoogte;
         this.vakGrootte = 50;
+        this.spelerNamen = spelerNamen;
 
         //User control eigenschappen
         this.Height = this.vakGrootte * this.veldHoogte + 1;
@@ -45,6 +48,8 @@ class Veld : UserControl
         this.BackColor = Color.Green;
         this.Paint += this.tekenVeld;
         this.MouseClick += this.doeZet;
+        this.MouseMove += this.beweeg;
+        this.DoubleBuffered = true;
 
         this.initVeld();
     }
@@ -52,12 +57,25 @@ class Veld : UserControl
     public void initVeld()
     {
         //Reset het geheugen
-        this.geheugen = new int[this.veldBreedte, this.veldHoogte];        
+        this.geheugen = new int[this.veldBreedte, this.veldHoogte];
+        startSpel();
+    }
+
+    Point muisVak = new Point(-1, -1);
+    private void beweeg(object obj, MouseEventArgs m)
+    {
+        Point muisVak = new Point(m.X / 50, m.Y / 50);
+        if (muisVak.X != this.muisVak.X || muisVak.Y != this.muisVak.Y)
+        {
+            this.Invalidate();
+            this.muisVak = muisVak;
+        }
     }
 
     public void startSpel()
     {
-        this.beurt = 1;
+        this.beurt = 0;
+        this.hint = false;
         this.gestart = true;
 
         //Plaats 4 stenen in het midden van het veld
@@ -79,11 +97,11 @@ class Veld : UserControl
         //Reset de array met geldige zetten
         this.geldig = new bool[this.veldBreedte, this.veldHoogte];
 
+        if (this.beurt % 2 == 0 && this.gestart) this.status = this.spelerNamen[0];
+        else if (this.beurt % 2 == 1 && this.gestart) this.status = this.spelerNamen[1];
+
         //Teken de stenen uit het geheugen op het bord
         this.tekenVakjes(gr);
-
-        //Debug info speelVeld
-        Console.WriteLine("Aan de beurt: {4}, Beurt: {0}, Mogelijkheden: {1}, Speler 1 Score: {2}, Speler 2 Score: {3}", this.beurt, this.mogelijkheden, this.score(1), this.score(2), this.beurt % 2);
 
         if (mogelijkheden == 0 && gestart)
         {
@@ -95,14 +113,12 @@ class Veld : UserControl
             }
             else
             {
-                if (this.pas[0]) MessageBox.Show("Speler 1 heeft geen mogelijke zetten. Speler 2 is aan de beurt.");
-                else if (this.pas[1]) MessageBox.Show("Speler 2 heeft geen mogelijke zetten. Speler 1 is aan de beurt.");
+                if (this.pas[0]) MessageBox.Show(this.spelerNamen[0] + " heeft geen mogelijke zetten. " + this.spelerNamen[1] + " is aan de beurt.");
+                else if (this.pas[1]) MessageBox.Show(this.spelerNamen[1] + " heeft geen mogelijke zetten. " + this.spelerNamen[0] + " is aan de beurt.");
                 this.Invalidate();
                 this.beurt++;
             }
         }
-
-        this.hint = false;
     }
 
     //Geef de score van de aangegeven speler aan de hand van het geheugen
@@ -119,11 +135,13 @@ class Veld : UserControl
     private void eindeSpel()
     {
         String message = "Er zijn geen mogelijke zetten meer.";
-        if (score(1) > score(2)) message += " Speler 1 wint!";
-        else if (score(1) < score(2)) message += " Speler 2 wint!";
+        String message2 = "";
+        if (score(1) > score(2)) message2 = " " + this.spelerNamen[0] + " wint!";
+        else if (score(1) < score(2)) message2 = " " + this.spelerNamen[1] + " wint!";
         else message += " Remise!";
+        this.status = message2;
         this.gestart = false;
-        MessageBox.Show(message);
+        MessageBox.Show(message + message2);
     }
 
     //Teken het veld vanuit het geheugen op het scherm
@@ -154,9 +172,28 @@ class Veld : UserControl
                     else if (this.beurt % 2 == 1) pen = new Pen(this.speler2Brush);
                     gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                 }
+
                 else if (this.valideerZet(x, y))
                 {
                     this.geldig[x, y] = true;
+                }
+
+                if (x == this.muisVak.X && y == this.muisVak.Y)
+                {
+                    if (this.geldig[x, y] == false)
+                    {
+                        Pen pen = default(Pen);
+                        if (this.beurt % 2 == 0) pen = new Pen(this.speler1Brush, 2);
+                        else if (this.beurt % 2 == 1) pen = new Pen(this.speler2Brush, 2);
+                        gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
+                    }
+                    else if (this.geldig[x, y] == true)
+                    {
+                        Brush spelerBrush = default(Brush);
+                        if (this.beurt % 2 == 0) spelerBrush = this.speler1Brush;
+                        else if (this.beurt % 2 == 1) spelerBrush = this.speler2Brush;
+                        gr.FillEllipse(spelerBrush, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
+                    }
                 }
             }
     }
@@ -164,6 +201,7 @@ class Veld : UserControl
     private void doeZet(object obj, MouseEventArgs m)
     {
         this.pas[this.beurt % 2] = false;
+        this.hint = false;
 
         //Bepaal in welk vak is geklikt
         int vakX = m.X / 50;
@@ -281,10 +319,8 @@ class Veld : UserControl
                 for (int vx = 0; vx < this.veldBreedte; vx++)
                     if (veroverbaar[vx, vy])
                     {
-                        Console.WriteLine("vx {0}, vy {1} is veroverd", vx, vy);
                         this.geheugen[vx, vy] = this.beurt % 2 + 1;
                     }
-            Console.WriteLine("Richting rx: {0}, ry: {1} is veroverd", rx, ry);
         }
     }
 

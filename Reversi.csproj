@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1EF4369C-1B24-4E07-B941-679103BA5C16}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Reversi</RootNamespace>
     <AssemblyName>Reversi</AssemblyName>
@@ -31,12 +31,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="invoer.cs" />
     <Compile Include="knop.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="naamScherm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reversi.cs">
       <SubType>Form</SubType>
