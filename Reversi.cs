@@ -22,10 +22,12 @@ public class Scherm : Form
         this.speelVeld = new Veld(new Point(180, 20), veldHoogte, veldBreedte, this.spelerNamen);
         this.StartPosition = FormStartPosition.CenterScreen;
 
+        //Schermgrootte wordt aangepast aan de grootte van het speelbord
         this.ClientSize = new Size(200 + speelVeld.vakGrootte * veldBreedte, 40 + speelVeld.vakGrootte * speelVeld.veldHoogte);
         if (this.ClientSize.Height < 210) this.ClientSize = new Size(200 + speelVeld.vakGrootte * speelVeld.veldBreedte, 210);
         this.MaximumSize = this.Size;
         this.MinimumSize = this.Size;
+
         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
         this.Paint += tekenStenen;
         this.DoubleBuffered = true;
@@ -43,10 +45,12 @@ public class Scherm : Form
         this.speelVeld.Paint += this.updateScherm;
         this.Controls.Add(this.speelVeld);
 
+        //Scherm dat de namen van de spelers vraag wordt aangeroepen
         this.naamScherm = new NaamScherm(this);
         this.naamScherm.ShowDialog();   
     }
 
+    //Methode om de stenen te tekenen die de kleuren van beide spelers in de UI tonen
     private void tekenStenen(object obj, PaintEventArgs pea)
     {
         Graphics gr = pea.Graphics;
@@ -74,6 +78,7 @@ public class Scherm : Form
         }
     }
 
+    //Functie voor het dynamisch updaten van het scherm aan de hand van speelVeld events
     public void updateScherm(object obj, PaintEventArgs pea)
     {
         this.speler1Score.Text = spelerNamen[0] + ": " + Convert.ToString(this.speelVeld.score(1));

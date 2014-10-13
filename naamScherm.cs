@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
+//Scherm voor het invoeren van spelernamen
 public class NaamScherm : Form
 {
     public Invoer naam1 = new Invoer("", new Point(40, 55));

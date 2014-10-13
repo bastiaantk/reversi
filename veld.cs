@@ -75,6 +75,9 @@ class Veld : UserControl
     Point muisVak = new Point(-1, -1);
     private void beweeg(object obj, MouseEventArgs m)
     {
+        /*Verplaats de cursor alleen als de muis in een ander vak is
+         * dan de vorige keer dat de muis bewoog
+         */
         Point muisVak = new Point(m.X / 50, m.Y / 50);
         if (muisVak.X != this.muisVak.X || muisVak.Y != this.muisVak.Y)
         {
@@ -116,12 +119,15 @@ class Veld : UserControl
 
         if (mogelijkheden == 0 && gestart)
         {
+            //Als er geen mogelijkheden zijn krijgt de speler die aan de beurt is een pas
             this.pas[this.beurt % 2] = true;
             
+            //Beindig het spel als beide spelers na elkaar hebben gepast of het veld vol ligt
             if ((this.pas[0] && this.pas[1]) || this.veldVol)
             {
                 this.eindeSpel();
             }
+            //Als één van beide spelers afzonderlijk moet passen is de ander aan de beurt
             else
             {
                 if (this.pas[0]) MessageBox.Show(this.spelerNamen[0] + " heeft geen mogelijke zetten. " + this.spelerNamen[1] + " is aan de beurt.");
@@ -143,6 +149,7 @@ class Veld : UserControl
         return score;
     }
 
+    //Functie die wordt aangeroepen als het spel beeindigd wordt
     private void eindeSpel()
     {
         String message = "Er zijn geen mogelijke zetten meer.";
@@ -189,16 +196,19 @@ class Veld : UserControl
                     this.geldig[x, y] = true;
                 }
 
+                //Teken de cursor in het aangewezen vak
                 if (x == this.muisVak.X && y == this.muisVak.Y)
                 {
-                    if (this.geldig[x, y] == false)
+                    //Teken zonder hints
+                    if (this.geldig[x, y] == false || (this.geldig[x, y] == true && !this.hint))
                     {
                         Pen pen = default(Pen);
                         if (this.beurt % 2 == 0) pen = new Pen(this.speler1Brush, 2);
                         else if (this.beurt % 2 == 1) pen = new Pen(this.speler2Brush, 2);
                         gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                     }
-                    else if (this.geldig[x, y] == true)
+                    //Teken met hints
+                    else if (this.geldig[x, y] == true && this.hint)
                     {
                         Brush spelerBrush = default(Brush);
                         if (this.beurt % 2 == 0) spelerBrush = this.speler1Brush;
