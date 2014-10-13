@@ -25,6 +25,17 @@ class Veld : UserControl
             return mogelijkheden;
         }
     }
+    private bool veldVol
+    {
+        get
+        {
+            for (int y = 0; y < this.veldHoogte; y++)
+                for (int x = 0; x < this.veldBreedte; x++)
+                    if (this.geheugen[x, y] == 0) return false;
+
+            return true;
+        }
+    }
     public static Color speler1Kleur = Color.White;
     public static Color speler2Kleur = Color.Black;
     public Brush speler2Brush = new SolidBrush(speler1Kleur);
@@ -107,7 +118,7 @@ class Veld : UserControl
         {
             this.pas[this.beurt % 2] = true;
             
-            if (this.pas[0] && this.pas[1])
+            if ((this.pas[0] && this.pas[1]) || this.veldVol)
             {
                 this.eindeSpel();
             }
