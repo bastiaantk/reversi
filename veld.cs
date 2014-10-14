@@ -5,14 +5,17 @@ using System.Drawing;
 class Veld : UserControl
 {
     public int veldBreedte, veldHoogte, vakGrootte;
+
     int[,] geheugen;
     bool[,] geldig;
     public bool hint = false;
     public bool gestart = false;
     bool[] pas = new bool[2];
     public int beurt = 0;
+
     public String status;
     String[] spelerNamen;
+
     public int mogelijkheden
     {
         get
@@ -25,6 +28,7 @@ class Veld : UserControl
             return mogelijkheden;
         }
     }
+
     private bool veldVol
     {
         get
@@ -36,6 +40,7 @@ class Veld : UserControl
             return true;
         }
     }
+
     public static Color speler1Kleur = Color.White;
     public static Color speler2Kleur = Color.Black;
     public Brush speler2Brush = new SolidBrush(speler1Kleur);
@@ -222,13 +227,15 @@ class Veld : UserControl
     private void doeZet(object obj, MouseEventArgs m)
     {
         this.pas[this.beurt % 2] = false;
-        this.hint = false;
 
         //Bepaal in welk vak is geklikt
         int vakX = m.X / 50;
         int vakY = m.Y / 50;
 
         if (this.valideerZet(vakX, vakY)) {
+            //Hints worden na deze zet weer verborgen
+            this.hint = false;
+
             //Verander het geheugen op de plaatsen van de veroverde stenen
             this.verover(vakX, vakY);
 

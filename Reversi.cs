@@ -1,4 +1,4 @@
-﻿//Reversi door Charlotte en Bastiaan
+//Reversi door Charlotte en Bastiaan
 
 using System;
 using System.Drawing;
@@ -8,13 +8,19 @@ public class Scherm : Form
 {
     Knop nieuwSpel = new Knop("Nieuw spel", new Point(20,20));
     Knop hint = new Knop("Hint", new Point(20, 64));
+
     Tekst speler1Score = new Tekst("Speler 1: 0", new Point(45, 110));
     Tekst speler2Score = new Tekst ("Speler 2: 0",new Point(45, 140));
+
     Tekst beurten = new Tekst ("Beurt: ", new Point(45, 170));
-    const int veldBreedte = 4;
-    const int veldHoogte = 4;
+
+    const int veldBreedte = 10;
+    const int veldHoogte = 10;
+
     Veld speelVeld;
+
     public String[] spelerNamen = {"Speler 1", "Speler 2"};
+
     NaamScherm naamScherm;
 
     public Scherm() 
