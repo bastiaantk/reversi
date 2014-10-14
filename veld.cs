@@ -83,7 +83,7 @@ class Veld : UserControl
         /*Verplaats de cursor alleen als de muis in een ander vak is
          * dan de vorige keer dat de muis bewoog
          */
-        Point muisVak = new Point(m.X / 50, m.Y / 50);
+        Point muisVak = new Point(m.X / this.vakGrootte, m.Y / this.vakGrootte);
         if (muisVak.X != this.muisVak.X || muisVak.Y != this.muisVak.Y)
         {
             this.Invalidate();
@@ -229,8 +229,8 @@ class Veld : UserControl
         this.pas[this.beurt % 2] = false;
 
         //Bepaal in welk vak is geklikt
-        int vakX = m.X / 50;
-        int vakY = m.Y / 50;
+        int vakX = m.X / this.vakGrootte;
+        int vakY = m.Y / this.vakGrootte;
 
         if (this.valideerZet(vakX, vakY)) {
             //Hints worden na deze zet weer verborgen

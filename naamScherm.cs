@@ -24,9 +24,11 @@ public class NaamScherm : Form
         this.Controls.Add(naamLabel);
 
         this.naam1.Text = spelScherm.spelerNamen[0];
+        this.naam1.MaxLength = 10;
         this.Controls.Add(this.naam1);
 
         this.naam2.Text = spelScherm.spelerNamen[1];
+        this.naam2.MaxLength = 10;
         this.Controls.Add(this.naam2);
 
         Knop naamKnop = new Knop("Spelen", new Point(40, 185));

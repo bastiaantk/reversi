@@ -14,8 +14,8 @@ public class Scherm : Form
 
     Tekst beurten = new Tekst ("Beurt: ", new Point(45, 170));
 
-    const int veldBreedte = 10;
-    const int veldHoogte = 10;
+    const int veldBreedte = 6;
+    const int veldHoogte = 7;
 
     Veld speelVeld;
 
@@ -29,7 +29,7 @@ public class Scherm : Form
         this.StartPosition = FormStartPosition.CenterScreen;
 
         //Schermgrootte wordt aangepast aan de grootte van het speelbord
-        this.ClientSize = new Size(200 + speelVeld.vakGrootte * veldBreedte, 40 + speelVeld.vakGrootte * speelVeld.veldHoogte);
+        this.ClientSize = new Size(200 + speelVeld.vakGrootte * speelVeld.veldBreedte, 40 + speelVeld.vakGrootte * speelVeld.veldHoogte);
         if (this.ClientSize.Height < 210) this.ClientSize = new Size(200 + speelVeld.vakGrootte * speelVeld.veldBreedte, 210);
         this.MaximumSize = this.Size;
         this.MinimumSize = this.Size;
