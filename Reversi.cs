@@ -19,8 +19,8 @@ public class Scherm : Form
 
     Tekst beurten = new Tekst ("Beurt: ", new Point(50, 230));
 
-    const int veldBreedte = 3;
-    const int veldHoogte = 3;
+    const int veldBreedte = 7;
+    const int veldHoogte = 6;
 
     Veld speelVeld;
 
