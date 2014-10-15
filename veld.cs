@@ -8,15 +8,16 @@ class Veld : UserControl
 
     int[,] geheugen;
     bool[,] geldig;
-    public bool hint = false;
-    public bool gestart = false;
+    public bool Hint = false;
+    public bool Gestart = false;
     bool[] pas = new bool[2];
-    public int beurt = 0;
+    public int Beurt = 0;
 
-    public String status;
+    public String Status;
     String[] spelerNamen;
 
-    public int mogelijkheden
+    //Aantal mogelijke zetten
+    public int Mogelijkheden
     {
         get
         {
@@ -29,6 +30,7 @@ class Veld : UserControl
         }
     }
 
+    //Elk vakje bevat een steen
     private bool veldVol
     {
         get
@@ -41,10 +43,11 @@ class Veld : UserControl
         }
     }
 
-    public static Color speler1Kleur = Color.White;
-    public static Color speler2Kleur = Color.Black;
-    public Brush speler2Brush = new SolidBrush(speler1Kleur);
-    public Brush speler1Brush = new SolidBrush(speler2Kleur);
+    public static Color Speler1Kleur = Color.Black;
+    public static Color Speler2Kleur = Color.White;
+    
+    public Brush Speler1Brush = new SolidBrush(Speler1Kleur);
+    public Brush Speler2Brush = new SolidBrush(Speler2Kleur);
 
     public Veld(Point locatie, int veldBreedte, int veldHoogte, String[] spelerNamen)
     {
@@ -62,23 +65,24 @@ class Veld : UserControl
         this.Width = this.vakGrootte * this.veldBreedte + 1;
         this.Location = locatie;
         this.BackColor = Color.Green;
+        this.BackgroundImage = Image.FromFile("C:\\Users\\Gebruiker\\Documents\\GitHub\\reversi\\speelveld.png");
         this.Paint += this.tekenVeld;
         this.MouseClick += this.doeZet;
-        this.MouseMove += this.beweeg;
+        this.MouseMove += this.beweegCursor;
         this.DoubleBuffered = true;
 
-        this.initVeld();
+        this.InitVeld();
     }
 
-    public void initVeld()
+    public void InitVeld()
     {
         //Reset het geheugen
         this.geheugen = new int[this.veldBreedte, this.veldHoogte];
-        startSpel();
+        StartSpel();
     }
 
     Point muisVak = new Point(-1, -1);
-    private void beweeg(object obj, MouseEventArgs m)
+    private void beweegCursor(object obj, MouseEventArgs m)
     {
         /*Verplaats de cursor alleen als de muis in een ander vak is
          * dan de vorige keer dat de muis bewoog
@@ -91,11 +95,11 @@ class Veld : UserControl
         }
     }
 
-    public void startSpel()
+    public void StartSpel()
     {
-        this.beurt = 0;
-        this.hint = false;
-        this.gestart = true;
+        this.Beurt = 0;
+        this.Hint = false;
+        this.Gestart = true;
 
         //Plaats 4 stenen in het midden van het veld
         int middenX = (int)Math.Ceiling((double)this.veldBreedte / 2);
@@ -116,20 +120,22 @@ class Veld : UserControl
         //Reset de array met geldige zetten
         this.geldig = new bool[this.veldBreedte, this.veldHoogte];
 
-        if (this.beurt % 2 == 0 && this.gestart) this.status = this.spelerNamen[0];
-        else if (this.beurt % 2 == 1 && this.gestart) this.status = this.spelerNamen[1];
+        if (this.Beurt % 2 == 0 && this.Gestart) this.Status = this.spelerNamen[0];
+        else if (this.Beurt % 2 == 1 && this.Gestart) this.Status = this.spelerNamen[1];
 
         //Teken de stenen uit het geheugen op het bord
         this.tekenVakjes(gr);
 
-        if (mogelijkheden == 0 && gestart)
+        if (Mogelijkheden == 0 && Gestart)
         {
             //Als er geen mogelijkheden zijn krijgt de speler die aan de beurt is een pas
-            this.pas[this.beurt % 2] = true;
+            this.pas[this.Beurt % 2] = true;
             
             //Beindig het spel als beide spelers na elkaar hebben gepast of het veld vol ligt
             if ((this.pas[0] && this.pas[1]) || this.veldVol)
             {
+                //Beurt stijgt niet meer als de laatste zet is gedaan
+                this.Beurt--;
                 this.eindeSpel();
             }
             //Als één van beide spelers afzonderlijk moet passen is de ander aan de beurt
@@ -138,13 +144,13 @@ class Veld : UserControl
                 if (this.pas[0]) MessageBox.Show(this.spelerNamen[0] + " heeft geen mogelijke zetten. " + this.spelerNamen[1] + " is aan de beurt.");
                 else if (this.pas[1]) MessageBox.Show(this.spelerNamen[1] + " heeft geen mogelijke zetten. " + this.spelerNamen[0] + " is aan de beurt.");
                 this.Invalidate();
-                this.beurt++;
+                this.Beurt++;
             }
         }
     }
 
     //Geef de score van de aangegeven speler aan de hand van het geheugen
-    public int score(int speler)
+    public int Score(int speler)
     {
         int score = 0;
         for (int y = 0; y < this.veldHoogte; y++)
@@ -159,11 +165,11 @@ class Veld : UserControl
     {
         String message = "Er zijn geen mogelijke zetten meer.";
         String message2 = "";
-        if (score(1) > score(2)) message2 = " " + this.spelerNamen[0] + " wint!";
-        else if (score(1) < score(2)) message2 = " " + this.spelerNamen[1] + " wint!";
+        if (Score(1) > Score(2)) message2 = " " + this.spelerNamen[0] + " wint!";
+        else if (Score(1) < Score(2)) message2 = " " + this.spelerNamen[1] + " wint!";
         else message += " Remise!";
-        this.status = message2;
-        this.gestart = false;
+        this.Status = message2;
+        this.Gestart = false;
         MessageBox.Show(message + message2);
     }
 
@@ -176,23 +182,25 @@ class Veld : UserControl
             for (int x = 0; x < this.veldBreedte; x++)
             {
                 //Teken vakjes
-                gr.DrawRectangle(Pens.Black, this.vakGrootte * x, this.vakGrootte * y, this.vakGrootte, this.vakGrootte);
+                Pen lijn = new Pen(new SolidBrush(Color.FromArgb(100, 00, 00, 00)));
+                gr.DrawRectangle(lijn, this.vakGrootte * x, this.vakGrootte * y, this.vakGrootte, this.vakGrootte);
 
                 //Bepaal kleur van steen en teken steen
                 if (this.geheugen[x, y] > 0)
                 {
-                    if (this.geheugen[x, y] == 1) kleur = this.speler1Brush;
-                    else if (this.geheugen[x, y] == 2) kleur = this.speler2Brush;
+                    if (this.geheugen[x, y] == 1) kleur = this.Speler1Brush;
+                    else if (this.geheugen[x, y] == 2) kleur = this.Speler2Brush;
                     gr.FillEllipse(kleur, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                 }
 
                 //Teken mogelijke zetten
-                else if (this.valideerZet(x, y) && hint)
+                else if (this.valideerZet(x, y) && Hint)
                 {
                     this.geldig[x, y] = true;
                     Pen pen = default(Pen);
-                    if (this.beurt % 2 == 0) pen = new Pen(this.speler1Brush);
-                    else if (this.beurt % 2 == 1) pen = new Pen(this.speler2Brush);
+                    if (this.Beurt % 2 == 0) pen = new Pen(this.Speler1Brush, 2);
+                    else if (this.Beurt % 2 == 1) pen = new Pen(this.Speler2Brush, 2);
+                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                     gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                 }
 
@@ -205,19 +213,19 @@ class Veld : UserControl
                 if (x == this.muisVak.X && y == this.muisVak.Y)
                 {
                     //Teken zonder hints
-                    if (this.geldig[x, y] == false || (this.geldig[x, y] == true && !this.hint))
+                    if (this.geldig[x, y] == false || (this.geldig[x, y] == true && !this.Hint))
                     {
                         Pen pen = default(Pen);
-                        if (this.beurt % 2 == 0) pen = new Pen(this.speler1Brush, 2);
-                        else if (this.beurt % 2 == 1) pen = new Pen(this.speler2Brush, 2);
+                        if (this.Beurt % 2 == 0) pen = new Pen(this.Speler1Brush, 2);
+                        else if (this.Beurt % 2 == 1) pen = new Pen(this.Speler2Brush, 2);
                         gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                     }
                     //Teken met hints
-                    else if (this.geldig[x, y] == true && this.hint)
+                    else if (this.geldig[x, y] == true && this.Hint)
                     {
                         Brush spelerBrush = default(Brush);
-                        if (this.beurt % 2 == 0) spelerBrush = this.speler1Brush;
-                        else if (this.beurt % 2 == 1) spelerBrush = this.speler2Brush;
+                        if (this.Beurt % 2 == 0) spelerBrush = this.Speler1Brush;
+                        else if (this.Beurt % 2 == 1) spelerBrush = this.Speler2Brush;
                         gr.FillEllipse(spelerBrush, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                     }
                 }
@@ -226,7 +234,7 @@ class Veld : UserControl
 
     private void doeZet(object obj, MouseEventArgs m)
     {
-        this.pas[this.beurt % 2] = false;
+        this.pas[this.Beurt % 2] = false;
 
         //Bepaal in welk vak is geklikt
         int vakX = m.X / this.vakGrootte;
@@ -234,16 +242,16 @@ class Veld : UserControl
 
         if (this.valideerZet(vakX, vakY)) {
             //Hints worden na deze zet weer verborgen
-            this.hint = false;
+            this.Hint = false;
 
             //Verander het geheugen op de plaatsen van de veroverde stenen
             this.verover(vakX, vakY);
 
             //Plaats nieuwe steen in het geheugen
-            this.geheugen[vakX, vakY] = this.beurt % 2 + 1;
+            this.geheugen[vakX, vakY] = this.Beurt % 2 + 1;
 
             //Verander beurt
-            this.beurt++;
+            this.Beurt++;
 
             //Teken veld opnieuw
             this.Invalidate();
@@ -281,7 +289,7 @@ class Veld : UserControl
     //Check of de steen in het veld een andere is dan die van degene die aan de beurt is
     private bool isAndereSteen(int x, int y)
     {
-        if ((this.geheugen[x, y] != this.beurt % 2 + 1) && (this.geheugen[x, y] > 0)) return true;
+        if ((this.geheugen[x, y] != this.Beurt % 2 + 1) && (this.geheugen[x, y] > 0)) return true;
 
         return false;
     }
@@ -289,7 +297,7 @@ class Veld : UserControl
     //Check of de steen in het veld dezelfde is als die van degene die aan de beurt is
     private bool isZelfdeSteen(int x, int y)
     {
-        if (this.geheugen[x, y] == this.beurt % 2 + 1) return true;
+        if (this.geheugen[x, y] == this.Beurt % 2 + 1) return true;
         return false;
     }
 
@@ -347,7 +355,7 @@ class Veld : UserControl
                 for (int vx = 0; vx < this.veldBreedte; vx++)
                     if (veroverbaar[vx, vy])
                     {
-                        this.geheugen[vx, vy] = this.beurt % 2 + 1;
+                        this.geheugen[vx, vy] = this.Beurt % 2 + 1;
                     }
         }
     }
