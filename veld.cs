@@ -2,19 +2,29 @@
 using System.Windows.Forms;
 using System.Drawing;
 
+//Speelveld klasse
 class Veld : UserControl
 {
+    //Veld attributen
     public int veldBreedte, veldHoogte, vakGrootte;
 
+    //Variabelen die de huidige spelsituatie onthouden
     int[,] geheugen;
     bool[,] geldig;
     public bool Hint = false;
+    //Gestart geeft aan dat er een spel bezig is
     public bool Gestart = false;
     bool[] pas = new bool[2];
     public int Beurt = 0;
 
+    //Waarden voor weergave van de spelsituatie
+    //De status wordt o.a. weergegeven in de titelbalk
     public String Status;
     String[] spelerNamen;
+    public static Color Speler1Kleur = Color.Black;
+    public static Color Speler2Kleur = Color.White;
+    public Brush Speler1Brush = new SolidBrush(Speler1Kleur);
+    public Brush Speler2Brush = new SolidBrush(Speler2Kleur);
 
     //Aantal mogelijke zetten
     public int Mogelijkheden
@@ -30,7 +40,7 @@ class Veld : UserControl
         }
     }
 
-    //Elk vakje bevat een steen
+    //Controleer of elk vakje een steen bevat
     private bool veldVol
     {
         get
@@ -43,12 +53,7 @@ class Veld : UserControl
         }
     }
 
-    public static Color Speler1Kleur = Color.Black;
-    public static Color Speler2Kleur = Color.White;
-    
-    public Brush Speler1Brush = new SolidBrush(Speler1Kleur);
-    public Brush Speler2Brush = new SolidBrush(Speler2Kleur);
-
+    //Constructor methode
     public Veld(Point locatie, int veldBreedte, int veldHoogte, String[] spelerNamen)
     {
         //Minimum breedte en hoogte is 3
@@ -65,38 +70,24 @@ class Veld : UserControl
         this.Width = this.vakGrootte * this.veldBreedte + 1;
         this.Location = locatie;
         this.BackColor = Color.Green;
-        this.BackgroundImage = Image.FromFile("C:\\Users\\Gebruiker\\Documents\\GitHub\\reversi\\speelveld.png");
-        this.Paint += this.tekenVeld;
+        //Vaagheid uit de designer om een achtergrond in te stellen
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Veld));
+        this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+        this.Name = "Veld";
+        this.Paint += this.updateSpel;
         this.MouseClick += this.doeZet;
         this.MouseMove += this.beweegCursor;
+        //Dubbele graphics buffering tegen flikkeren van de achtergrond
         this.DoubleBuffered = true;
 
+        //Stel standaard waarden in
         this.InitVeld();
     }
 
     public void InitVeld()
     {
-        //Reset het geheugen
+        //Reset het spelgeheugen
         this.geheugen = new int[this.veldBreedte, this.veldHoogte];
-        StartSpel();
-    }
-
-    Point muisVak = new Point(-1, -1);
-    private void beweegCursor(object obj, MouseEventArgs m)
-    {
-        /*Verplaats de cursor alleen als de muis in een ander vak is
-         * dan de vorige keer dat de muis bewoog
-         */
-        Point muisVak = new Point(m.X / this.vakGrootte, m.Y / this.vakGrootte);
-        if (muisVak.X != this.muisVak.X || muisVak.Y != this.muisVak.Y)
-        {
-            this.Invalidate();
-            this.muisVak = muisVak;
-        }
-    }
-
-    public void StartSpel()
-    {
         this.Beurt = 0;
         this.Hint = false;
         this.Gestart = true;
@@ -112,7 +103,8 @@ class Veld : UserControl
         this.Cursor = Cursors.Hand;
     }
 
-    private void tekenVeld(object obj, PaintEventArgs pea)
+    //Update alle belangrijke waarden voor het spel als de paint event van het speelveld wordt aangeroepen
+    private void updateSpel(object obj, PaintEventArgs pea)
     {
         Graphics gr = pea.Graphics;
         gr.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
@@ -124,7 +116,7 @@ class Veld : UserControl
         else if (this.Beurt % 2 == 1 && this.Gestart) this.Status = this.spelerNamen[1];
 
         //Teken de stenen uit het geheugen op het bord
-        this.tekenVakjes(gr);
+        this.tekenVeld(gr);
 
         if (Mogelijkheden == 0 && Gestart)
         {
@@ -141,40 +133,16 @@ class Veld : UserControl
             //Als één van beide spelers afzonderlijk moet passen is de ander aan de beurt
             else
             {
-                if (this.pas[0]) MessageBox.Show(this.spelerNamen[0] + " heeft geen mogelijke zetten. " + this.spelerNamen[1] + " is aan de beurt.");
-                else if (this.pas[1]) MessageBox.Show(this.spelerNamen[1] + " heeft geen mogelijke zetten. " + this.spelerNamen[0] + " is aan de beurt.");
+                if (this.pas[0]) MessageBox.Show(this.spelerNamen[0] + " heeft geen mogelijke zetten. " + this.spelerNamen[1] + " is aan de beurt.", "Geen mogelijkheden");
+                else if (this.pas[1]) MessageBox.Show(this.spelerNamen[1] + " heeft geen mogelijke zetten. " + this.spelerNamen[0] + " is aan de beurt.", "Geen mogelijkheden");
                 this.Invalidate();
                 this.Beurt++;
             }
         }
     }
 
-    //Geef de score van de aangegeven speler aan de hand van het geheugen
-    public int Score(int speler)
-    {
-        int score = 0;
-        for (int y = 0; y < this.veldHoogte; y++)
-            for (int x = 0; x < this.veldBreedte; x++)
-                if (this.geheugen[x, y] == speler) score++;
-
-        return score;
-    }
-
-    //Functie die wordt aangeroepen als het spel beeindigd wordt
-    private void eindeSpel()
-    {
-        String message = "Er zijn geen mogelijke zetten meer.";
-        String message2 = "";
-        if (Score(1) > Score(2)) message2 = " " + this.spelerNamen[0] + " wint!";
-        else if (Score(1) < Score(2)) message2 = " " + this.spelerNamen[1] + " wint!";
-        else message += " Remise!";
-        this.Status = message2;
-        this.Gestart = false;
-        MessageBox.Show(message + message2);
-    }
-
     //Teken het veld vanuit het geheugen op het scherm
-    private void tekenVakjes(Graphics gr)
+    private void tekenVeld(Graphics gr)
     {
         Brush kleur = default(Brush);
 
@@ -212,7 +180,7 @@ class Veld : UserControl
                 //Teken de cursor in het aangewezen vak
                 if (x == this.muisVak.X && y == this.muisVak.Y)
                 {
-                    //Teken zonder hints
+                    //Teken zonder hints (draw ellipse)
                     if (this.geldig[x, y] == false || (this.geldig[x, y] == true && !this.Hint))
                     {
                         Pen pen = default(Pen);
@@ -220,7 +188,7 @@ class Veld : UserControl
                         else if (this.Beurt % 2 == 1) pen = new Pen(this.Speler2Brush, 2);
                         gr.DrawEllipse(pen, 5 + x * this.vakGrootte, 5 + y * this.vakGrootte, this.vakGrootte - 10, this.vakGrootte - 10);
                     }
-                    //Teken met hints
+                    //Teken met hints (fill ellipse)
                     else if (this.geldig[x, y] == true && this.Hint)
                     {
                         Brush spelerBrush = default(Brush);
@@ -230,6 +198,50 @@ class Veld : UserControl
                     }
                 }
             }
+    }
+
+    //Feedback voor het bewegen van de muis op het speelbord
+    Point muisVak = new Point(-1, -1);
+    private void beweegCursor(object obj, MouseEventArgs m)
+    {
+        /*Verplaats de cursor alleen als de muis in een ander vak is
+         * dan de vorige keer dat de muis bewoog
+         */
+        Point muisVak = new Point(m.X / this.vakGrootte, m.Y / this.vakGrootte);
+        if (muisVak.X != this.muisVak.X || muisVak.Y != this.muisVak.Y)
+        {
+            this.Invalidate();
+            this.muisVak = muisVak;
+        }
+    }
+
+    //Geef de score van de in de parameter aangegeven speler aan de hand van het geheugen
+    public int Score(int speler)
+    {
+        int score = 0;
+        for (int y = 0; y < this.veldHoogte; y++)
+            for (int x = 0; x < this.veldBreedte; x++)
+                if (this.geheugen[x, y] == speler) score++;
+
+        return score;
+    }
+
+    //Functie die wordt aangeroepen als het spel beeindigd wordt
+    private void eindeSpel()
+    {
+        String message = "Er zijn geen mogelijke zetten meer.";
+        String message2 = "";
+
+        //De speler met de hoogste score wint
+        if (Score(1) > Score(2)) message2 = " " + this.spelerNamen[0] + " wint!";
+        else if (Score(1) < Score(2)) message2 = " " + this.spelerNamen[1] + " wint!";
+        else message += " Remise!";
+
+        this.Status = message2;
+
+        this.Gestart = false;
+
+        MessageBox.Show(message + message2, message2);
     }
 
     private void doeZet(object obj, MouseEventArgs m)
@@ -354,9 +366,7 @@ class Veld : UserControl
             for (int vy = 0; vy < this.veldHoogte; vy++)
                 for (int vx = 0; vx < this.veldBreedte; vx++)
                     if (veroverbaar[vx, vy])
-                    {
                         this.geheugen[vx, vy] = this.Beurt % 2 + 1;
-                    }
         }
     }
 

@@ -4,12 +4,15 @@ using System.Drawing;
 
 public class Knop : Button
 {
-    public Knop(String tekst, Point locatie, Size size = default(Size))
+    public Knop(String tekst, Point locatie, Size grootte = default(Size))
     {
         this.Text = tekst;
         this.Location = locatie;
-        if (size == default(Size)) this.Size = new Size(140, 34);
-        else this.Size = size;
+
+        //Als er geen grootte is ingesteld, wordt deze standaard ingesteld
+        if (grootte == default(Size)) this.Size = new Size(140, 34);
+        else this.Size = grootte;
+
         this.Font = new Font("Corbel", 14);
     }
 }

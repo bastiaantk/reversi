@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-//Scherm voor het invoeren van spelernamen
+//Scherm voor het invoeren van spelopties
 public class OptieScherm : Form
 {
     public Invoer Naam1 = new Invoer("", new Point(40, 55));
@@ -36,31 +36,35 @@ public class OptieScherm : Form
 
         this.Controls.Add(new Tekst("Spelers:", new Point(40, 20)));
 
+        //Naam speler 1
         this.Naam1.Text = spelScherm.SpelerNamen[0];
         this.Naam1.MaxLength = 10;
         this.Controls.Add(this.Naam1);
 
+        //Naam speler 2
         this.Naam2.Text = spelScherm.SpelerNamen[1];
         this.Naam2.MaxLength = 10;
         this.Controls.Add(this.Naam2);
 
+        //Hoogte van het speelbord
         this.Controls.Add(new Tekst("Hoogte:", new Point(200, 20)));
         this.Hoogte.MaxLength = 2;
         this.Hoogte.Width = 90;
         this.Controls.Add(this.Hoogte);
 
+        //Breedte van het speelbord
         this.Controls.Add(new Tekst("Breedte:", new Point(200, 90)));
         this.Breedte.MaxLength = 2;
         this.Breedte.Width = 90;
         this.Controls.Add(this.Breedte);
 
+        //Aanvinken of hints zijn toegestaan
         this.Hints.Text = "Hints";
         this.Hints.Font = new Font("Corbel", 14);
         this.Hints.Checked = true;
         this.Hints.Location = new Point(40, 155);
         this.Controls.Add(this.Hints);
 
-        
         this.optieKnop.Click += this.klik;
         this.Controls.Add(this.optieKnop);
 
@@ -71,6 +75,7 @@ public class OptieScherm : Form
 
     private void klik(object sender, EventArgs e)
     {
+        //Opties opslaan
         if (sender == this.optieKnop)
         {
             //Opties worden voor het spelScherm ingesteld
@@ -78,6 +83,7 @@ public class OptieScherm : Form
             this.spelScherm.SpelerNamen[0] = this.Naam1.Text;
             this.spelScherm.SpelerNamen[1] = this.Naam2.Text;
 
+            //Instellen van de dimensies van het speelbord
             int veldHoogte;
             int veldBreedte;
             try
@@ -97,19 +103,21 @@ public class OptieScherm : Form
             {
                 veldBreedte = 6;
             }
-
             this.spelScherm.VeldHoogte = veldHoogte;
             this.spelScherm.VeldBreedte = veldBreedte;
 
             this.Close();
         }
 
+        //Reset instellingen naar standaard waarden
         if (sender == this.resetKnop)
         {
             this.Naam1.Text = "Speler 1";
             this.Naam2.Text = "Speler 2";
+
             this.Breedte.Text = "6";
             this.Hoogte.Text = "6";
+
             this.Hints.Checked = true;
         }
     }

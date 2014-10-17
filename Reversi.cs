@@ -28,7 +28,7 @@ public class Scherm : Form
 
     public Scherm() 
     {
-        //Scherm dat de namen van de spelers vraag wordt aangeroepen
+        //Geeft opties weer
         this.optieScherm = new OptieScherm(this);
         this.optieScherm.ShowDialog(); 
 
@@ -66,8 +66,9 @@ public class Scherm : Form
         this.MaximumSize = new Size();
 
         //Grootte van het scherm wordt bepaald door het aantal vakjes in het speelveld
-        this.ClientSize = new Size(200 + this.speelVeld.vakGrootte * this.speelVeld.veldBreedte, 40 + this.speelVeld.vakGrootte * this.speelVeld.veldHoogte);
-        if (this.ClientSize.Height < 210) this.ClientSize = new Size(200 + this.speelVeld.vakGrootte * this.speelVeld.veldBreedte, 280);
+        this.ClientSize = new Size(200 + (this.speelVeld.vakGrootte * this.speelVeld.veldBreedte), 40 + (this.speelVeld.vakGrootte * this.speelVeld.veldHoogte));
+        //Minimaal 280 hoog i.v.m. zichtbaarheid user interface
+        if (this.ClientSize.Height < 280) this.ClientSize = new Size(200 + this.speelVeld.vakGrootte * this.speelVeld.veldBreedte, 280);
         
         //Stel maximum grootte weer in op de huidige grootte, zodat er niet geresized kan worden
         this.MaximumSize = this.Size;
@@ -101,10 +102,13 @@ public class Scherm : Form
         //Start een nieuw spel klik
         if (sender == this.nieuwSpel)
         {
+            //Geeft opties weer
             this.optieScherm.ShowDialog();
 
+            //Oude spel verwijderen
             this.Controls.Remove(this.speelVeld);
 
+            //Start nieuw spel
             this.speelVeld = new Veld(new Point(180, 20), VeldHoogte, VeldBreedte, this.SpelerNamen);
             this.speelVeld.Paint += this.updateScherm;
             this.Controls.Add(speelVeld);
@@ -144,7 +148,7 @@ public class Scherm : Form
 
 public class Reversi
 {
-    public static void Main() 
+    public static void Main()
     {
         Application.Run(new Scherm());
     }
